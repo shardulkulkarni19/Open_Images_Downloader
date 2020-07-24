@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 # configurations
-folder_img_count = 5
+folder_img_count = 500
 
 images = pd.read_csv(r'E:/Cemtrex Labs/Open Images/dummy.csv')
 img_name = images.iloc[:,0].tolist()
@@ -17,10 +17,10 @@ total_images = len(img_name)
 counter = 0
 timer = datetime.now()
 for img,url in zip(img_name, img_url):
-    if counter % 5 == 0:
+    if counter % 50 == 0:
         tt = (datetime.now() - timer).seconds
         print('time required for 50 images  ', tt, 'remaining time ',
-              (total_images - counter) * timedelta(seconds=tt / 5))
+              (total_images - counter) * timedelta(seconds=tt / 50))
         timer = datetime.now()
     if counter < 0:
         counter += 1
