@@ -7,6 +7,7 @@ import threading
 
 
 def downnload_images(q, q1, total_images):
+    timer_image_count = 50
     folder_img_count = 500
     timer = datetime.now()
     while not q.empty():
@@ -16,23 +17,22 @@ def downnload_images(q, q1, total_images):
         print(counter, ": ", img)
         if os.path.isfile(filename):
             continue
-        if counter % 50 == 0:
+        if counter % timer_image_count == 0:
             tt = (datetime.now() - timer).seconds
             remaining_img = (total_images - counter)
             print('time required for 50 images ', tt, 'remaining time for ', remaining_img, ' images ',
-                  remaining_img * timedelta(seconds=tt / 50))
+                  remaining_img * timedelta(seconds=tt / timer_image_count))
             timer = datetime.now()
 
         if not os.path.exists(folder_name):
             try:
                 os.makedirs(folder_name)
             except FileExistsError:
-                print('exception caught')
                 pass
 
         response = get(url)
         status = str(response.status_code)
-        size = len(response.content)    #Returns size in bytes
+        size = len(response.content)  # Returns size in bytes
         if size > 1024:
             if status[0] == '2':
                 with open(filename, 'wb') as handler:
@@ -40,15 +40,11 @@ def downnload_images(q, q1, total_images):
                 data = (img, 0)
             else:
                 data = (img, 1)
-                pass
             q1.put(data)
-    q1.put(('a',2))
+    q1.put(('a', 2))
 
 
 def write_to_file(q):
-    # folder = 'E:/Cemtrex Labs/Open Images/ID'
-    # if not os.path.exists(folder_name):
-    #     os.makedirs(folder_name)
     filetxt = 'E:/Cemtrex Labs/Open Images/test_success.csv'
     file = 'E:/Cemtrex Labs/Open Images/test_fail.csv'
     while True:
@@ -56,13 +52,12 @@ def write_to_file(q):
         if flag == 0:
             with open(filetxt, 'a') as s:
                 s.write(img + "\n")
-            pass
         elif flag == 1:
             with open(file, 'a') as f:
                 f.write(img + "\n")
-            pass
         elif flag == 2:
             break
+
 
 if __name__ == '__main__':
     q0 = Queue()
@@ -74,13 +69,10 @@ if __name__ == '__main__':
     annFile = "E:/Cemtrex Labs/Open Images/test_occ_present_list.csv"
     csv_file = read_csv(annFile)
 
-    # import pdb; pdb.set_trace()
     imgs = csv_file.ImageID.tolist()
     urls = csv_file.OriginalURL.tolist()
-    imgs = imgs[0:]
-    urls = urls[0:]
     total_images = len(imgs)
-    counter = 0
+    counter = 80500
     flag = 0
     for img, url in zip(imgs, urls):
         if flag == 0:
