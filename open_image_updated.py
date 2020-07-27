@@ -77,10 +77,10 @@ if __name__ == '__main__':
     # import pdb; pdb.set_trace()
     imgs = csv_file.ImageID.tolist()
     urls = csv_file.OriginalURL.tolist()
-    imgs = imgs[0:20]
-    urls = urls[0:20]
+    imgs = imgs[0:]
+    urls = urls[0:]
     total_images = len(imgs)
-    counter = 80500
+    counter = 0
     flag = 0
     for img, url in zip(imgs, urls):
         if flag == 0:
